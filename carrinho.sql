@@ -1,6 +1,0 @@
-CREATE TABLE carrinho (
-    id SERIAL PRIMARY KEY,
-    id_usuario INTEGER NOT NULL,
-    total DECIMAL(10, 2) DEFAULT 0.00,
-    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);

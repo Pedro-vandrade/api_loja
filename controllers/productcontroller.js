@@ -1,5 +1,4 @@
-import pool from '../config/database.js';
-
+import pool from '../config/database.js'
 class ProdutoController {
     async index (req, res)  {
         try {
@@ -9,8 +8,9 @@ class ProdutoController {
             res.status(500).json({ erro: error.message });
         }
     }
-
-    async showById (req, res) {
+    
+    
+    async buscarPorId (req, res) {
         const { id } = req.params;
         try {
             const result = await pool.query("SELECT * FROM store.produtos WHERE id = $1;", [id]);
@@ -24,7 +24,31 @@ class ProdutoController {
         }
     }
 
-    async insert (req, res) {
+    async buscarPorCategoria(req, res) {
+        const { categoria } = req.params;
+    
+        if (typeof categoria !== "string") {
+            return res.status(400).json({ erro: "O parâmetro categoria deve ser um texto" });
+        }
+    
+        try {
+            const result = await pool.query(
+                "SELECT * FROM store.produtos WHERE LOWER(categoria) = LOWER($1);",
+                [categoria]
+            );
+    
+            if (result.rowCount > 0) {
+                res.status(200).json(result.rows)
+            } else {
+                res.status(404).json({ erro: "Categoria não encontrada" })
+            }
+        } catch (error) {
+            res.status(500).json({ erro: error.message })
+        }
+    }
+    
+
+    async inserir (req, res) {
         const { produto, preco, categoria } = req.body;
         try {
             const result = await pool.query(
